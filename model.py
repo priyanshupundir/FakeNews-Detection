@@ -18,7 +18,7 @@ def wordopt(text):
 
 @st.cache_resource
 def load_model():
-    fake = pd.read_csv("fake.csv")
+    fake = pd.read_csv("Fake.csv")
     true = pd.read_csv("true.csv")
 
     fake["class"] = 0
