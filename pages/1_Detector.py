@@ -43,6 +43,12 @@ textarea {
     padding: 15px !important;
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 .result-fake {
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
     border: 2px solid rgba(239, 68, 68, 0.5);
@@ -126,9 +132,14 @@ news = st.text_area(
     placeholder="Paste your news article here...",
     label_visibility="collapsed"
 )
+
+col1, col2, col3 = st.columns([1, 1, 1])
+with col2:
+    verify_button = st.button("🔍 Verify News", use_container_width=True, key="verify_btn")
+
 st.markdown('</div>', unsafe_allow_html=True)
 
-if news and len(news.strip()) > 10:
+if verify_button and news and len(news.strip()) > 10:
     with st.spinner("🔍 Analyzing article..."):
         label, prob = predict(news)
 
@@ -159,5 +170,8 @@ if news and len(news.strip()) > 10:
 
     st.info("💡 **Tip:** This analysis is based on machine learning patterns. Always cross-reference with trusted news sources for critical information.")
 
-elif news and len(news.strip()) <= 10:
+elif verify_button and news and len(news.strip()) <= 10:
     st.warning("📝 Please paste a longer article (at least 10 characters) for accurate analysis.")
+
+elif verify_button and not news:
+    st.error("❌ Please paste an article first before verifying.")

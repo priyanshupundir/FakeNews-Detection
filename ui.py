@@ -58,6 +58,10 @@ def landing_page():
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
 
         .workflow-box:hover {
@@ -79,19 +83,21 @@ def landing_page():
             font-weight: bold;
             font-size: 20px;
             margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .workflow-title {
             font-size: 18px;
             font-weight: 700;
             color: #60a5fa;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .workflow-desc {
             color: #cbd5e1;
-            line-height: 1.6;
+            line-height: 1.8;
             font-size: 15px;
+            margin: 0;
         }
 
         .divider {
@@ -119,7 +125,7 @@ def landing_page():
 
         .info-content {
             color: #e2e8f0;
-            line-height: 1.7;
+            line-height: 1.8;
         }
         </style>
         """,
@@ -142,18 +148,18 @@ def landing_page():
     <div class="workflow-container">
         <div class="workflow-box">
             <div class="workflow-number">1</div>
-            <div class="workflow-title">📝 Input Article</div>
-            <div class="workflow-desc">Paste the full news article or text you want to analyze. Our system handles any length of content.</div>
+            <div class="workflow-title">Input</div>
+            <div class="workflow-desc">Paste a news article(Reuters style) or claim you want to verify. Our system accepts text of any length.</div>
         </div>
         <div class="workflow-box">
             <div class="workflow-number">2</div>
-            <div class="workflow-title">🧠 Analyze Patterns</div>
-            <div class="workflow-desc">Our ML model examines writing patterns, language structure, and content characteristics.</div>
+            <div class="workflow-title">Process</div>
+            <div class="workflow-desc">Text is cleaned and vectorized using <strong>TF-IDF</strong> technology for accurate analysis.</div>
         </div>
         <div class="workflow-box">
             <div class="workflow-number">3</div>
-            <div class="workflow-title">✅ Get Results</div>
-            <div class="workflow-desc">Receive instant classification: Fake or Real with confidence scores and detailed insights.</div>
+            <div class="workflow-title">Classify</div>
+            <div class="workflow-desc"><strong>Logistic Regression</strong> model classifies content as Fake or Real with confidence scores.</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -165,9 +171,9 @@ def landing_page():
     <div class="info-box">
         <div class="info-label">✨ Key Features</div>
         <div class="info-content">
-            <strong>Fast Detection:</strong> Get results in seconds, not minutes<br>
-            <strong>Accurate:</strong> Trained on thousands of verified articles<br>
-            <strong>Easy to Use:</strong> Simple copy-paste interface, no technical knowledge required<br>
+            <strong>Fast Detection:</strong> Get results in seconds, not minutes<br><br>
+            <strong>Accurate:</strong> Trained on thousands of verified articles<br><br>
+            <strong>Easy to Use:</strong> Simple copy-paste interface, no technical knowledge required<br><br>
             <strong>Instant Feedback:</strong> Clear classification with confidence metrics
         </div>
     </div>
