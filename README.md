@@ -91,9 +91,3 @@ This project is deployed using Streamlit Community Cloud, which directly runs th
 📊 Confidence score visualization
 
 📰 News source credibility analysis
-
-👨‍💻 Author
-
-Priyanshu Pundir
-🎓 B.Tech Student
-💡 Interested in ML, NLP & Web Development
