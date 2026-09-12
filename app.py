@@ -4,141 +4,285 @@ st.set_page_config(page_title="Fake News Detector", layout="wide")
 
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #fef9f3 0%, #fff7ed 50%, #fef6ee 100%);
+    color: #334155;
+    min-height: 100vh;
 }
 
 .main {
     background: transparent;
+    padding: 2rem;
 }
 
+/* Modern Hero Section */
 .hero-section {
     text-align: center;
-    padding: 60px 20px 40px;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.8));
-    border-radius: 20px;
-    margin-bottom: 40px;
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    backdrop-filter: blur(10px);
+    padding: 80px 40px 60px;
+    background: linear-gradient(135deg, rgba(251, 146, 60, 0.08), rgba(129, 140, 248, 0.05));
+    border-radius: 24px;
+    margin-bottom: 50px;
+    border: 1px solid rgba(251, 146, 60, 0.15);
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(251, 146, 60, 0.08) 0%, transparent 70%);
+    animation: pulse 15s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
 }
 
 .hero-section h1 {
-    font-size: 3.5em;
-    font-weight: 800;
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 4.5em;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fb923c 0%, #f97316 50%, #818cf8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 15px;
-    letter-spacing: -1px;
+    margin-bottom: 20px;
+    letter-spacing: -2px;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 0 40px rgba(251, 146, 60, 0.2);
 }
 
 .hero-section p {
-    font-size: 1.2em;
-    color: #cbd5e1;
-    margin-bottom: 10px;
+    font-size: 1.4em;
+    color: #64748b;
+    margin-bottom: 12px;
     font-weight: 500;
+    position: relative;
+    z-index: 1;
 }
 
 .subtitle {
     color: #94a3b8;
-    font-size: 1em;
-}
-
-.features-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    margin: 40px 0;
-}
-
-.feature-box {
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.5));
-    border: 1px solid rgba(148, 163, 184, 0.3);
-    border-radius: 16px;
-    padding: 30px;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.feature-box:hover {
-    border-color: rgba(96, 165, 250, 0.5);
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8));
-    transform: translateY(-5px);
-}
-
-.feature-box h3 {
-    color: #60a5fa;
-    margin-bottom: 12px;
-    font-size: 1.3em;
-}
-
-.feature-box p {
-    color: #cbd5e1;
-    line-height: 1.6;
-    font-size: 0.95em;
-}
-
-.step-number {
-    display: inline-block;
-    width: 35px;
-    height: 35px;
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
-    color: white;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 35px;
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.cta-button {
-    display: inline-block;
-    margin-top: 30px;
-}
-
-.button-text {
     font-size: 1.1em;
-    font-weight: 600;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
 }
 
-.divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
-    margin: 40px 0;
-}
-
+/* Modern Stats Container */
 .stats-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin: 30px 0 40px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 45px;
+    margin: 40px 0 50px;
 }
 
 .stat-box {
     text-align: center;
-    padding: 20px;
-    background: rgba(30, 41, 59, 0.4);
-    border-radius: 12px;
-    border: 1px solid rgba(96, 165, 250, 0.2);
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(254, 249, 243, 0.8));
+    border-radius: 20px;
+    border: 1px solid rgba(251, 146, 60, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #fb923c, #818cf8);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-8px);
+    border-color: rgba(251, 146, 60, 0.4);
+    box-shadow: 0 20px 40px rgba(251, 146, 60, 0.15);
+}
+
+.stat-box:hover::before {
+    transform: scaleX(1);
 }
 
 .stat-number {
-    font-size: 2em;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.8em;
     font-weight: 700;
-    color: #60a5fa;
+    background: linear-gradient(135deg, #fb923c, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
 }
 
 .stat-label {
-    color: #94a3b8;
-    font-size: 0.9em;
-    margin-top: 5px;
+    color: #64748b;
+    font-size: 1em;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
+
+/* Modern Features Container */
+.features-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 45px;
+    margin: 50px 0;
+}
+
+.feature-box {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(254, 249, 243, 0.9));
+    border: 1px solid rgba(251, 146, 60, 0.15);
+    border-radius: 20px;
+    padding: 35px;
+    backdrop-filter: blur(15px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.feature-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(251, 146, 60, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.feature-box:hover {
+    border-color: rgba(251, 146, 60, 0.4);
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(251, 146, 60, 0.15);
+}
+
+.feature-box:hover::before {
+    opacity: 1;
+}
+
+.feature-box h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #fb923c;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.feature-box p {
+    color: #475569;
+    line-height: 1.8;
+    font-size: 1em;
+    position: relative;
+    z-index: 1;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #fb923c, #818cf8);
+    color: white;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.2em;
+    box-shadow: 0 4px 15px rgba(251, 146, 60, 0.3);
+}
+
+/* Modern Divider */
+.divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.3), transparent);
+    margin: 50px 0;
+    position: relative;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(251, 146, 60, 0.15), transparent);
+    border-radius: 50%;
+}
+
+/* Modern Button Styles */
+.cta-button {
+    display: inline-block;
+    margin-top: 40px;
+}
+
+.button-text {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+/* Section Headers */
+h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+/* Animation for elements */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-section, .stat-box, .feature-box {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.stat-box:nth-child(2) { animation-delay: 0.1s; }
+.stat-box:nth-child(3) { animation-delay: 0.2s; }
+.feature-box:nth-child(2) { animation-delay: 0.1s; }
+.feature-box:nth-child(3) { animation-delay: 0.2s; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -180,7 +324,7 @@ with col3:
 st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
 # How It Works
-st.markdown("<h2 style='text-align: center; color: #e2e8f0; margin-bottom: 30px;'>⚙️ How It Works</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: #334155; margin-bottom: 30px;'>⚙️ How It Works</h2>", unsafe_allow_html=True)
 
 st.markdown("""
 <div class="features-container">
@@ -202,7 +346,7 @@ st.markdown("""
 st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
 # Why It Matters
-st.markdown("<h2 style='text-align: center; color: #e2e8f0; margin-bottom: 30px;'>🎯 Why This Matters</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: #334155; margin-bottom: 30px;'>🎯 Why This Matters</h2>", unsafe_allow_html=True)
 
 col1, col2 = st.columns([1, 1])
 with col1:
@@ -232,15 +376,21 @@ with col2:
 st.markdown("""
 <style>
 button[key="cta_button"] {
-    height: 50px !important;
-    font-size: 1.1em !important;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    height: 60px !important;
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+    background: linear-gradient(135deg, #fb923c, #818cf8) !important;
     border: none !important;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(251, 146, 60, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
 button[key="cta_button"]:hover {
-    background: linear-gradient(135deg, #2563eb, #1e40af) !important;
+    background: linear-gradient(135deg, #f97316, #6366f1) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(251, 146, 60, 0.4) !important;
 }
 </style>
 """, unsafe_allow_html=True)
