@@ -1,396 +1,306 @@
 import streamlit as st
 
-st.set_page_config(page_title="Fake News Detector", layout="wide")
+st.set_page_config(
+    page_title="Fake News Detector",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
+# Custom CSS
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Hide Streamlit defaults */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(135deg, #fef9f3 0%, #fff7ed 50%, #fef6ee 100%);
+/* Global Styles & Background */
+[data-testid="stAppViewContainer"], .main {
+    background-color: #FFFBF5;
+    font-family: 'Inter', sans-serif;
     color: #334155;
-    min-height: 100vh;
 }
 
-.main {
-    background: transparent;
-    padding: 2rem;
+/* Sidebar styling to match theme */
+[data-testid="stSidebar"] {
+    background-color: #FFF4E8 !important;
 }
 
-/* Modern Hero Section */
-.hero-section {
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Hero Section */
+.hero-card {
+    background: linear-gradient(135deg, #FFF4E8 0%, #FFFBF5 100%);
+    border-radius: 28px;
+    padding: 60px 40px;
     text-align: center;
-    padding: 80px 40px 60px;
-    background: linear-gradient(135deg, rgba(251, 146, 60, 0.08), rgba(129, 140, 248, 0.05));
-    border-radius: 24px;
-    margin-bottom: 50px;
-    border: 1px solid rgba(251, 146, 60, 0.15);
-    backdrop-filter: blur(20px);
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+    margin-bottom: 40px;
 }
-
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(251, 146, 60, 0.08) 0%, transparent 70%);
-    animation: pulse 15s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.1); opacity: 0.8; }
-}
-
-.hero-section h1 {
+.hero-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 4.5em;
+    font-size: 4em;
     font-weight: 700;
-    background: linear-gradient(135deg, #fb923c 0%, #f97316 50%, #818cf8 100%);
+    background: linear-gradient(135deg, #F97316, #FB923C, #818CF8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 20px;
-    letter-spacing: -2px;
-    position: relative;
-    z-index: 1;
-    text-shadow: 0 0 40px rgba(251, 146, 60, 0.2);
+    margin-bottom: 15px;
+    line-height: 1.2;
 }
-
-.hero-section p {
-    font-size: 1.4em;
+.hero-subtitle {
+    font-size: 1.5em;
     color: #64748b;
-    margin-bottom: 12px;
     font-weight: 500;
-    position: relative;
-    z-index: 1;
+    margin-bottom: 10px;
 }
-
-.subtitle {
-    color: #94a3b8;
+.hero-tagline {
     font-size: 1.1em;
-    font-weight: 400;
-    position: relative;
-    z-index: 1;
+    color: #94a3b8;
 }
 
-/* Modern Stats Container */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 45px;
-    margin: 40px 0 50px;
-}
-
-.stat-box {
-    text-align: center;
-    padding: 30px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(254, 249, 243, 0.8));
+/* Stat Cards */
+.stat-card {
     border-radius: 20px;
-    border: 1px solid rgba(251, 146, 60, 0.2);
-    backdrop-filter: blur(10px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+    height: 100%;
 }
-
-.stat-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #fb923c, #818cf8);
-    transform: scaleX(0);
-    transition: transform 0.4s ease;
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
-
-.stat-box:hover {
-    transform: translateY(-8px);
-    border-color: rgba(251, 146, 60, 0.4);
-    box-shadow: 0 20px 40px rgba(251, 146, 60, 0.15);
-}
-
-.stat-box:hover::before {
-    transform: scaleX(1);
-}
-
 .stat-number {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 2.8em;
     font-weight: 700;
-    background: linear-gradient(135deg, #fb923c, #818cf8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
-
 .stat-label {
     color: #64748b;
-    font-size: 1em;
-    font-weight: 500;
+    font-size: 0.95em;
     text-transform: uppercase;
     letter-spacing: 1px;
+    font-weight: 600;
 }
+.stat-peach { background-color: #FFF4E8; }
+.stat-peach .stat-number { color: #F97316; }
 
-/* Modern Features Container */
+.stat-blue { background-color: #EBF2FF; }
+.stat-blue .stat-number { color: #3B82F6; }
+
+.stat-lavender { background-color: #F0EDFF; }
+.stat-lavender .stat-number { color: #7C3AED; }
+
+/* Features Container (Grid) */
 .features-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 45px;
-    margin: 50px 0;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
 }
-
-.feature-box {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(254, 249, 243, 0.9));
-    border: 1px solid rgba(251, 146, 60, 0.15);
+.feature-card {
     border-radius: 20px;
     padding: 35px;
-    backdrop-filter: blur(15px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
-.feature-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(251, 146, 60, 0.05), transparent);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.feature-box:hover {
-    border-color: rgba(251, 146, 60, 0.4);
-    transform: translateY(-8px);
-    box-shadow: 0 25px 50px rgba(251, 146, 60, 0.15);
-}
-
-.feature-box:hover::before {
-    opacity: 1;
-}
-
-.feature-box h3 {
-    font-family: 'Space Grotesk', sans-serif;
-    color: #fb923c;
-    margin-bottom: 15px;
-    font-size: 1.4em;
-    font-weight: 600;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: column;
 }
-
-.feature-box p {
-    color: #475569;
-    line-height: 1.8;
-    font-size: 1em;
-    position: relative;
-    z-index: 1;
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
-
-.step-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.step-badge {
     width: 45px;
     height: 45px;
-    background: linear-gradient(135deg, #fb923c, #818cf8);
-    color: white;
     border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 700;
     font-size: 1.2em;
-    box-shadow: 0 4px 15px rgba(251, 146, 60, 0.3);
+    margin-bottom: 20px;
 }
+.card-peach { background-color: #FFF4E8; }
+.card-peach .step-badge { background: rgba(249, 115, 22, 0.15); color: #F97316; }
+.card-peach h3 { color: #F97316; }
 
-/* Modern Divider */
-.divider {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(251, 146, 60, 0.3), transparent);
-    margin: 50px 0;
-    position: relative;
-}
+.card-sage { background-color: #E8F5E8; }
+.card-sage .step-badge { background: rgba(34, 197, 94, 0.15); color: #22C55E; }
+.card-sage h3 { color: #22C55E; }
 
-.divider::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle, rgba(251, 146, 60, 0.15), transparent);
-    border-radius: 50%;
-}
+.card-blue { background-color: #EBF2FF; }
+.card-blue .step-badge { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
+.card-blue h3 { color: #3B82F6; }
 
-/* Modern Button Styles */
-.cta-button {
-    display: inline-block;
-    margin-top: 40px;
-}
-
-.button-text {
-    font-size: 1.2em;
-    font-weight: 600;
-}
-
-/* Section Headers */
-h2 {
+.feature-card h3 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 2.5em;
+    font-size: 1.4em;
+    margin-bottom: 15px;
     font-weight: 700;
+}
+.feature-card p {
+    color: #475569;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Full Width Banner */
+.banner-card {
+    background: linear-gradient(135deg, #FFFBF5 0%, #E0F2FE 50%, #BAE6FD 100%);
+    border-radius: 28px;
+    padding: 50px;
+    margin: 40px 0;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.banner-column {
+    flex: 1;
+    min-width: 300px;
+}
+.banner-column h3 {
     color: #334155;
-    margin-bottom: 40px;
-    text-align: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.banner-column p {
+    color: #475569;
+    line-height: 1.8;
 }
 
-/* Animation for elements */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Subtle Divider */
+.custom-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
+    margin: 40px 0;
+    border: none;
 }
 
-.hero-section, .stat-box, .feature-box {
-    animation: fadeInUp 0.8s ease-out;
+/* CTA Button */
+[data-testid="stButton"] button {
+    background: #F97316 !important;
+    color: white !important;
+    border-radius: 14px !important;
+    height: 56px !important;
+    font-size: 1.15em !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.25) !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    margin: 0 auto !important;
+    display: block !important;
 }
-
-.stat-box:nth-child(2) { animation-delay: 0.1s; }
-.stat-box:nth-child(3) { animation-delay: 0.2s; }
-.feature-box:nth-child(2) { animation-delay: 0.1s; }
-.feature-box:nth-child(3) { animation-delay: 0.2s; }
+[data-testid="stButton"] button:hover {
+    background: #EA580C !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.35) !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
 # Hero Section
 st.markdown("""
-<div class="hero-section">
-    <h1>📰 Fake News Detector</h1>
-    <p>AI-Powered News Credibility Checker</p>
-    <p class="subtitle">Detect misinformation in seconds with advanced machine learning</p>
+<div class="hero-card animate-up">
+    <div class="hero-title">Fake News Detector</div>
+    <div class="hero-subtitle">Identify misinformation with AI</div>
+    <div class="hero-tagline">Fast, accurate, and reliable news classification.</div>
 </div>
 """, unsafe_allow_html=True)
 
-# Stats
+# 3 Stat Columns
 col1, col2, col3 = st.columns(3)
 with col1:
     st.markdown("""
-    <div class="stat-box">
+    <div class="stat-card stat-peach animate-up" style="animation-delay: 0.1s;">
         <div class="stat-number">98%</div>
-        <div class="stat-label">Accuracy Rate</div>
+        <div class="stat-label">Accuracy</div>
     </div>
     """, unsafe_allow_html=True)
-
 with col2:
     st.markdown("""
-    <div class="stat-box">
+    <div class="stat-card stat-blue animate-up" style="animation-delay: 0.2s;">
         <div class="stat-number">&lt;1s</div>
         <div class="stat-label">Detection Time</div>
     </div>
     """, unsafe_allow_html=True)
-
 with col3:
     st.markdown("""
-    <div class="stat-box">
+    <div class="stat-card stat-lavender animate-up" style="animation-delay: 0.3s;">
         <div class="stat-number">AI</div>
         <div class="stat-label">Powered</div>
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
+st.markdown('<hr class="custom-divider">', unsafe_allow_html=True)
 
-# How It Works
-st.markdown("<h2 style='text-align: center; color: #334155; margin-bottom: 30px;'>⚙️ How It Works</h2>", unsafe_allow_html=True)
-
+# How It Works Section
 st.markdown("""
-<div class="features-container">
-    <div class="feature-box">
-        <h3><span class="step-number">1</span>Input</h3>
-        <p>Paste a news article or claim you want to verify. Our system accepts text of any length.</p>
+<div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="font-family: 'Space Grotesk', sans-serif; color: #334155; font-size: 2.2em;">How It Works</h2>
+</div>
+<div class="features-container animate-up" style="animation-delay: 0.4s;">
+    <div class="feature-card card-peach">
+        <div class="step-badge">1</div>
+        <h3>Input</h3>
+        <p>Paste the text or URL of the news article you want to verify. Our system accepts various formats to make it easy for you.</p>
     </div>
-    <div class="feature-box">
-        <h3><span class="step-number">2</span>Process</h3>
-        <p>Text is cleaned and vectorized using <strong>TF-IDF</strong> technology for accurate analysis.</p>
+    <div class="feature-card card-sage">
+        <div class="step-badge">2</div>
+        <h3>Process</h3>
+        <p>Our advanced AI engine analyzes the content, checking linguistic patterns, sources, and factual inconsistencies.</p>
     </div>
-    <div class="feature-box">
-        <h3><span class="step-number">3</span>Classify</h3>
-        <p><strong>Logistic Regression</strong> model classifies content as Fake or Real with confidence scores.</p>
+    <div class="feature-card card-blue">
+        <div class="step-badge">3</div>
+        <h3>Classify</h3>
+        <p>Get instant results showing whether the news is likely Real or Fake, along with confidence scores and insights.</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
+st.markdown('<hr class="custom-divider">', unsafe_allow_html=True)
 
-# Why It Matters
-st.markdown("<h2 style='text-align: center; color: #334155; margin-bottom: 30px;'>🎯 Why This Matters</h2>", unsafe_allow_html=True)
-
-col1, col2 = st.columns([1, 1])
-with col1:
-    st.markdown("""
-    <div class="feature-box">
+# Why This Matters Section (Full Width Banner)
+st.markdown("""
+<div class="banner-card animate-up" style="animation-delay: 0.5s;">
+    <div class="banner-column">
         <h3>🔴 The Problem</h3>
-        <p>Fake news spreads rapidly, distorts public perception, and causes real-world harm. Traditional fact-checking is too slow.</p>
+        <p>Misinformation spreads faster than ever in the digital age. Fake news can manipulate public opinion, damage reputations, and cause widespread panic. It's becoming increasingly difficult for readers to distinguish fact from fiction in their daily news consumption.</p>
     </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-    <div class="feature-box">
+    <div class="banner-column">
         <h3>🟢 Our Solution</h3>
-        <p>Instant credibility assessment powered by AI. Get reliable analysis in seconds to combat misinformation effectively.</p>
+        <p>We leverage cutting-edge machine learning and natural language processing to combat misinformation. By providing a quick, reliable tool, we empower users to verify the news they consume and share, promoting a healthier digital information ecosystem.</p>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
-st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
+st.markdown('<hr class="custom-divider">', unsafe_allow_html=True)
 
 # CTA Button
-col1, col2, col3 = st.columns([1, 1, 1])
-with col2:
-    if st.button("🚀 Start Detecting Now", use_container_width=True, key="cta_button"):
+st.markdown('<div style="text-align: center; margin-bottom: 20px;"><h2 style="font-family: \'Space Grotesk\', sans-serif; color: #334155;">Ready to test it out?</h2></div>', unsafe_allow_html=True)
+
+# Streamlit button wrapped in columns to center it if needed, but CSS handles width and margin auto
+col_empty1, col_btn, col_empty2 = st.columns([1, 1, 1])
+with col_btn:
+    if st.button("Try the Detector Now"):
         st.switch_page("pages/1_Detector.py")
-
-st.markdown("""
-<style>
-button[key="cta_button"] {
-    height: 60px !important;
-    font-size: 1.2em !important;
-    font-weight: 600 !important;
-    background: linear-gradient(135deg, #fb923c, #818cf8) !important;
-    border: none !important;
-    border-radius: 12px !important;
-    color: white !important;
-    box-shadow: 0 4px 15px rgba(251, 146, 60, 0.3) !important;
-    transition: all 0.3s ease !important;
-}
-
-button[key="cta_button"]:hover {
-    background: linear-gradient(135deg, #f97316, #6366f1) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(251, 146, 60, 0.4) !important;
-}
-</style>
-""", unsafe_allow_html=True)
